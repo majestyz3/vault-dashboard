@@ -1,0 +1,11 @@
+{
+  "Core Secrets Management": [
+    { "name": "KV Engine Enabled", "api": "/v1/sys/mounts", "check": "secret/", "points": 2 },
+    { "name": "Dynamic Secrets (e.g. database/)", "api": "/v1/sys/mounts", "check": "database/", "points": 4 }
+  ],
+  "Authentication": [
+    { "name": "AppRole Enabled", "api": "/v1/sys/auth", "check": "approle/", "points": 3 },
+    { "name": "OIDC or Okta", "api": "/v1/sys/auth", "check": "oidc/", "points": 3 },
+    { "name": "AWS IAM Method", "api": "/v1/sys/auth", "check": "aws/", "points": 3 }
+  ]
+}
