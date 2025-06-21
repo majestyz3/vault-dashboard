@@ -43,3 +43,14 @@ npm run build
 ```
 
 Deploy the contents of the `dist` directory to the static host of your choice (for example Vercel or GitHub Pages).
+
+## New Visualisations
+
+The dashboard now includes several charts to illustrate adoption progress and operational metrics:
+
+- **Category Progress Bars** – show completion of each feature group.
+- **Adoption Over Time** – simple line graph driven by `data/adoptionHistory.json`.
+- **Secrets Engine and Auth Method Donuts** – basic donut charts summarising enabled mounts and auth methods.
+- **Leader Information** – displays the current Vault leader address.
+
+API calls are made to `/v1/sys/mounts`, `/v1/sys/auth` and `/v1/sys/leader` via the new `vaultMetricsClient.ts` helper.
