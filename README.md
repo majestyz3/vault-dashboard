@@ -17,11 +17,13 @@ The script checks that Node.js is installed and that the major version is at lea
 
 ## Setup
 
-Install dependencies and create a local environment file based on the provided example:
+Clone the repository and create a local environment file based on the provided example:
 
 ```bash
+git clone <repo-url>
+cd vault-dashboard
 npm install
-cp .env.example .env    # edit with your Vault address and token
+cp .env.example .env    # edit with your VAULT_ADDR and VAULT_TOKEN
 ```
 
 ## Development

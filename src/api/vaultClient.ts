@@ -12,6 +12,7 @@ export const fetchAuthMethods = () => client.get('/v1/sys/auth');
 export const fetchMounts = () => client.get('/v1/sys/mounts');
 export const fetchAuditDevices = () => client.get('/v1/sys/audit');
 export const fetchReplicationStatus = () => client.get('/v1/sys/replication/status');
+export const fetchSealStatus = () => client.get('/v1/sys/seal-status');
 export const fetchNamespaces = () => client.get('/v1/identity/namespace');
 export const fetchEntities = () => client.get('/v1/identity/entity/name');
 export const fetchPolicies = () => client.get('/v1/sys/policies/acl');
