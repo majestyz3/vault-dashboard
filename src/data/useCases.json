@@ -1,11 +1,34 @@
 {
   "Core Secrets Management": [
-    { "name": "KV Engine Enabled", "api": "/v1/sys/mounts", "check": "secret/", "points": 2 },
-    { "name": "Dynamic Secrets (e.g. database/)", "api": "/v1/sys/mounts", "check": "database/", "points": 4 }
+    { "name": "KV Secrets Engine Enabled", "points": 2, "dataset": "mounts", "check": "secret/" },
+    { "name": "Dynamic Secrets Engine Enabled (database/)", "points": 4, "dataset": "mounts", "check": "database/" }
   ],
-  "Authentication": [
-    { "name": "AppRole Enabled", "api": "/v1/sys/auth", "check": "approle/", "points": 3 },
-    { "name": "OIDC or Okta", "api": "/v1/sys/auth", "check": "oidc/", "points": 3 },
-    { "name": "AWS IAM Method", "api": "/v1/sys/auth", "check": "aws/", "points": 3 }
+  "Authentication Methods": [
+    { "name": "AppRole Enabled", "points": 3, "dataset": "auth", "check": "approle/" },
+    { "name": "OIDC or Okta Enabled", "points": 3, "dataset": "auth", "check": "oidc/|okta/" },
+    { "name": "AWS IAM Method", "points": 3, "dataset": "auth", "check": "aws/" }
+  ],
+  "Availability & Resilience": [
+    { "name": "Disaster Recovery Enabled", "points": 4, "dataset": "replication", "check": "dr_secondary" },
+    { "name": "Performance Replication", "points": 4, "dataset": "replication", "check": "performance_secondary" },
+    { "name": "Auto-Unseal with KMS", "points": 3, "dataset": "seal", "check": "awskms|shamir" }
+  ],
+  "Data Protection": [
+    { "name": "Transit Engine", "points": 3, "dataset": "mounts", "check": "transit/" },
+    { "name": "Transform (FPE)", "points": 4, "dataset": "mounts", "check": "transform/" }
+  ],
+  "PKI and Certificates": [
+    { "name": "PKI Engine", "points": 3, "dataset": "mounts", "check": "pki/" },
+    { "name": "KMIP", "points": 3, "dataset": "mounts", "check": "kmip/" }
+  ],
+  "Integrations": [
+    { "name": "Terraform Provider", "points": 2, "dataset": "mock" },
+    { "name": "Vault Agent Template", "points": 2, "dataset": "mock" },
+    { "name": "Secrets Operator in K8s", "points": 3, "dataset": "mock" }
+  ],
+  "Monitoring & Governance": [
+    { "name": "Audit Devices", "points": 2, "dataset": "audit" },
+    { "name": "Control Groups", "points": 3, "dataset": "policies", "check": "control_group" },
+    { "name": "Sentinel Policies", "points": 4, "dataset": "mock" }
   ]
 }
