@@ -1,34 +1,34 @@
 {
   "Core Secrets Management": [
-    { "name": "KV Secrets Engine Enabled", "points": 2, "dataset": "mounts", "check": "secret/" },
-    { "name": "Dynamic Secrets Engine Enabled (database/)", "points": 4, "dataset": "mounts", "check": "database/" }
+    { "name": "KV Secrets Engine Enabled", "points": 2, "dataset": "mounts", "check": "secret/", "enabledOn": "2024-01-05" },
+    { "name": "Dynamic Secrets Engine Enabled (database/)", "points": 4, "dataset": "mounts", "check": "database/", "enabledOn": "2024-03-12" }
   ],
   "Authentication Methods": [
-    { "name": "AppRole Enabled", "points": 3, "dataset": "auth", "check": "approle/" },
-    { "name": "OIDC or Okta Enabled", "points": 3, "dataset": "auth", "check": "oidc/|okta/" },
-    { "name": "AWS IAM Method", "points": 3, "dataset": "auth", "check": "aws/" }
+    { "name": "AppRole Enabled", "points": 3, "dataset": "auth", "check": "approle/", "enabledOn": "2024-02-10" },
+    { "name": "OIDC or Okta Enabled", "points": 3, "dataset": "auth", "check": "oidc/|okta/", "enabledOn": "2024-04-08" },
+    { "name": "AWS IAM Method", "points": 3, "dataset": "auth", "check": "aws/", "enabledOn": "2024-03-20" }
   ],
   "Availability & Resilience": [
-    { "name": "Disaster Recovery Enabled", "points": 4, "dataset": "replication", "check": "dr_secondary" },
-    { "name": "Performance Replication", "points": 4, "dataset": "replication", "check": "performance_secondary" },
-    { "name": "Auto-Unseal with KMS", "points": 3, "dataset": "seal", "check": "awskms|shamir" }
+    { "name": "Disaster Recovery Enabled", "points": 4, "dataset": "replication", "check": "dr_secondary", "enabledOn": "2024-06-01" },
+    { "name": "Performance Replication", "points": 4, "dataset": "replication", "check": "performance_secondary", "enabledOn": "2024-06-10" },
+    { "name": "Auto-Unseal with KMS", "points": 3, "dataset": "seal", "check": "awskms|shamir", "enabledOn": "2024-02-01" }
   ],
   "Data Protection": [
-    { "name": "Transit Engine", "points": 3, "dataset": "mounts", "check": "transit/" },
-    { "name": "Transform (FPE)", "points": 4, "dataset": "mounts", "check": "transform/" }
+    { "name": "Transit Engine", "points": 3, "dataset": "mounts", "check": "transit/", "enabledOn": "2024-05-15" },
+    { "name": "Transform (FPE)", "points": 4, "dataset": "mounts", "check": "transform/", "enabledOn": "2024-05-20" }
   ],
   "PKI and Certificates": [
-    { "name": "PKI Engine", "points": 3, "dataset": "mounts", "check": "pki/" },
-    { "name": "KMIP", "points": 3, "dataset": "mounts", "check": "kmip/" }
+    { "name": "PKI Engine", "points": 3, "dataset": "mounts", "check": "pki/", "enabledOn": "2024-01-15" },
+    { "name": "KMIP", "points": 3, "dataset": "mounts", "check": "kmip/", "enabledOn": "2024-07-01" }
   ],
   "Integrations": [
-    { "name": "Terraform Provider", "points": 2, "dataset": "mock" },
-    { "name": "Vault Agent Template", "points": 2, "dataset": "mock" },
-    { "name": "Secrets Operator in K8s", "points": 3, "dataset": "mock" }
+    { "name": "Terraform Provider", "points": 2, "dataset": "mock", "enabledOn": "2024-03-10" },
+    { "name": "Vault Agent Template", "points": 2, "dataset": "mock", "enabledOn": "2024-03-15" },
+    { "name": "Secrets Operator in K8s", "points": 3, "dataset": "mock", "enabledOn": "2024-04-20" }
   ],
   "Monitoring & Governance": [
-    { "name": "Audit Devices", "points": 2, "dataset": "audit" },
-    { "name": "Control Groups", "points": 3, "dataset": "policies", "check": "control_group" },
-    { "name": "Sentinel Policies", "points": 4, "dataset": "mock" }
+    { "name": "Audit Devices", "points": 2, "dataset": "audit", "enabledOn": "2024-02-05" },
+    { "name": "Control Groups", "points": 3, "dataset": "policies", "check": "control_group", "enabledOn": "2024-07-15" },
+    { "name": "Sentinel Policies", "points": 4, "dataset": "mock", "enabledOn": "2024-05-01" }
   ]
 }
