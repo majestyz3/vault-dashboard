@@ -5,8 +5,14 @@ const VAULT_TOKEN = import.meta.env.VITE_VAULT_TOKEN || process.env.VAULT_TOKEN;
 
 const client = axios.create({
   baseURL: VAULT_ADDR,
-  headers: { 'X-Vault-Token': VAULT_TOKEN }
 });
+
+export const setToken = (token: string) => {
+  client.defaults.headers.common['X-Vault-Token'] = token;
+};
+
+// init from env if provided
+if (VAULT_TOKEN) setToken(VAULT_TOKEN);
 
 export const fetchAuthMethods = () => client.get('/v1/sys/auth');
 export const fetchMounts = () => client.get('/v1/sys/mounts');

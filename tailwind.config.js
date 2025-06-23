@@ -4,8 +4,11 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+      },
       colors: {
-        vaultBlue: '#3274d9'
+        vaultBlue: '#3b82f6'
       }
     },
   },
