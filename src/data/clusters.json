@@ -1,0 +1,22 @@
+[
+  {
+    "id": "cluster-east",
+    "name": "Vault East",
+    "region": "us-east",
+    "address": "https://vault-east.example.com",
+    "status": "leader",
+    "sealed": false,
+    "uptime": 86400,
+    "nodes": 3
+  },
+  {
+    "id": "cluster-west",
+    "name": "Vault West",
+    "region": "us-west",
+    "address": "https://vault-west.example.com",
+    "status": "standby",
+    "sealed": false,
+    "uptime": 43200,
+    "nodes": 3
+  }
+]
