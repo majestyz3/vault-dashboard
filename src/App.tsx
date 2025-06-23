@@ -19,9 +19,9 @@ import {
 import {
   fetchLeader,
   fetchHealth,
-  fetchMetrics,
   setMetricsToken
 } from './api/vaultMetricsClient';
+import { queryPrometheus } from './api/prometheusClient';
 
 interface UseCaseItem {
   name: string;
@@ -39,6 +39,12 @@ const App: React.FC = () => {
   const [health, setHealth] = useState<any>(null);
   const [uptime, setUptime] = useState<number | null>(null);
   const [nodeCount, setNodeCount] = useState<number | null>(null);
+  const [leaderStatus, setLeaderStatus] = useState<string | null>(null);
+  const [sealStatus, setSealStatus] = useState<string | null>(null);
+  const [requestRate, setRequestRate] = useState<number | null>(null);
+  const [errorRate, setErrorRate] = useState<number | null>(null);
+  const [tokenRate, setTokenRate] = useState<number | null>(null);
+  const [storageHealthy, setStorageHealthy] = useState<boolean | null>(null);
   const [tab, setTab] = useState<'adoption' | 'operations'>('adoption');
 
   const evaluateCheck = (item: UseCaseItem, data: any): boolean => {
@@ -65,7 +71,7 @@ const App: React.FC = () => {
     if (!token) return;
     const load = async () => {
       try {
-        const [auth, mounts, audit, replication, seal, policies, leaderResp, healthResp, metricsResp] = await Promise.all([
+        const [auth, mounts, audit, replication, seal, policies, leaderResp, healthResp, leaderMetric, sealMetric, reqRate, errRate, tokenMetric, upMetric, peersMetric, storageMetric] = await Promise.all([
           fetchAuthMethods(),
           fetchMounts(),
           fetchAuditDevices(),
@@ -74,7 +80,14 @@ const App: React.FC = () => {
           fetchPolicies(),
           fetchLeader(),
           fetchHealth(),
-          fetchMetrics()
+          queryPrometheus('vault_raft_leader'),
+          queryPrometheus('vault_core_unsealed'),
+          queryPrometheus('rate(vault_core_request_count[1m])'),
+          queryPrometheus('rate(vault_core_request_errors[1m])'),
+          queryPrometheus('rate(vault_token_create_total[1m])'),
+          queryPrometheus('vault_uptime_seconds'),
+          queryPrometheus('vault_raft_peers'),
+          queryPrometheus('vault_storage_backend_healthy')
         ]);
         setResults({
           auth: auth.data,
@@ -86,12 +99,17 @@ const App: React.FC = () => {
         });
         setLeader(leaderResp.data);
         setHealth(healthResp.data);
+        const getValue = (res: any) => parseFloat(res.data.data.result[0]?.value[1] || '0');
+        const getInt = (res: any) => parseInt(res.data.data.result[0]?.value[1] || '0', 10);
 
-        const metrics: string = metricsResp.data || '';
-        const uptimeMatch = metrics.match(/vault_uptime_seconds(?:\{.*\})? (\d+)/);
-        if (uptimeMatch) setUptime(parseInt(uptimeMatch[1], 10));
-        const nodeMatch = metrics.match(/vault_raft_peers (\d+)/);
-        if (nodeMatch) setNodeCount(parseInt(nodeMatch[1], 10));
+        setLeaderStatus(getInt(leaderMetric) === 1 ? 'leader' : 'standby');
+        setSealStatus(getInt(sealMetric) === 1 ? 'unsealed' : 'sealed');
+        setRequestRate(getValue(reqRate));
+        setErrorRate(getValue(errRate));
+        setTokenRate(getValue(tokenMetric));
+        setUptime(getInt(upMetric));
+        setNodeCount(getInt(peersMetric));
+        setStorageHealthy(getInt(storageMetric) === 1);
       } catch (err) {
         console.error(err);
       } finally {
@@ -99,6 +117,8 @@ const App: React.FC = () => {
       }
     };
     load();
+    const id = setInterval(load, 15000);
+    return () => clearInterval(id);
   }, [token]);
 
   const totalPoints = Object.values(useCases).flat().reduce((sum, uc: UseCaseItem) => sum + uc.points, 0);
@@ -175,6 +195,32 @@ const App: React.FC = () => {
             </>
           ) : (
             <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-800 p-4 rounded">
+                  <h2 className="text-vaultBlue mb-1">Leader Status</h2>
+                  <p className={leaderStatus === 'leader' ? 'text-green-400' : 'text-yellow-400'}>{leaderStatus}</p>
+                </div>
+                <div className="bg-gray-800 p-4 rounded">
+                  <h2 className="text-vaultBlue mb-1">Seal Status</h2>
+                  <p className={sealStatus === 'unsealed' ? 'text-green-400' : 'text-red-400'}>{sealStatus}</p>
+                </div>
+                <div className="bg-gray-800 p-4 rounded">
+                  <h2 className="text-vaultBlue mb-1">Request Rate</h2>
+                  <p>{requestRate?.toFixed(2)} /s</p>
+                </div>
+                <div className="bg-gray-800 p-4 rounded">
+                  <h2 className="text-vaultBlue mb-1">Error Rate</h2>
+                  <p className={errorRate && errorRate > 1 ? 'text-red-400' : 'text-green-400'}>{errorRate?.toFixed(2)} /s</p>
+                </div>
+                <div className="bg-gray-800 p-4 rounded">
+                  <h2 className="text-vaultBlue mb-1">Token Creation Rate</h2>
+                  <p>{tokenRate?.toFixed(2)} /s</p>
+                </div>
+                <div className="bg-gray-800 p-4 rounded">
+                  <h2 className="text-vaultBlue mb-1">Storage Healthy</h2>
+                  <p className={storageHealthy ? 'text-green-400' : 'text-red-400'}>{storageHealthy ? 'healthy' : 'unhealthy'}</p>
+                </div>
+              </div>
               <div>
                 <h2 className="text-vaultBlue mb-2">Secrets Engines</h2>
                 <DonutChart slices={[{ label: 'engines', value: Object.keys(results.mounts || {}).length }]} />
