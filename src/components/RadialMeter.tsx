@@ -27,9 +27,10 @@ export const RadialMeter: React.FC<Props> = ({ percentage }) => (
         r="45"
         cx="50"
         cy="50"
+        style={{ transition: 'stroke-dashoffset 0.6s ease' }}
       />
     </svg>
-    <span className="text-white text-xl font-mono">{Math.round(percentage)}%</span>
+    <span className="text-white text-xl font-semibold">{Math.round(percentage)}%</span>
   </div>
 );
 
