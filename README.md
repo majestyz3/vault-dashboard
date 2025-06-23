@@ -65,3 +65,17 @@ docker run --env-file .env -p 4173:4173 vault-dashboard
 ```
 
 The site will be available at `http://localhost:4173`.
+
+## Docker Compose
+
+A `docker-compose.yml` file is provided to run Vault, Prometheus and the
+dashboard together. The stack exposes Vault on `8200`, Prometheus on `9090`
+and the dashboard on `4173`.
+
+Start the full environment with:
+
+```bash
+docker-compose up --build
+```
+
+Environment variables from `.env` are passed to the dashboard at build time.
