@@ -54,3 +54,14 @@ The dashboard now includes several charts to illustrate adoption progress and op
 - **Leader Information** – displays the current Vault leader address.
 
 API calls are made to `/v1/sys/mounts`, `/v1/sys/auth` and `/v1/sys/leader` via the new `vaultMetricsClient.ts` helper.
+
+## Docker
+
+A `Dockerfile` is included for containerised builds. To create the image and start the dashboard:
+
+```bash
+docker build -t vault-dashboard .
+docker run --env-file .env -p 4173:4173 vault-dashboard
+```
+
+The site will be available at `http://localhost:4173`.
