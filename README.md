@@ -72,6 +72,13 @@ A `docker-compose.yml` file is provided to run the dashboard container. It reads
 `VAULT_ADDR`, `VAULT_TOKEN` and `PROMETHEUS_ADDR` from your `.env` file so the
 app can connect to an existing Vault instance.
 
+If you are running the Vault stack from the companion repository, use the helper
+script to populate `.env` with the current `root_token` and start the container:
+
+```bash
+bash scripts/stack.sh
+```
+
 Start the container with:
 
 ```bash
