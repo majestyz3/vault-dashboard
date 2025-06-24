@@ -68,31 +68,14 @@ The site will be available at `http://localhost:4173`.
 
 ## Docker Compose
 
-A `docker-compose.yml` file is provided to run the dashboard container. It reads
-`VAULT_ADDR`, `VAULT_TOKEN` and `PROMETHEUS_ADDR` from your `.env` file so the
-app can connect to an existing Vault instance.
+A `docker-compose.yml` file is provided to run Vault, Prometheus and the
+dashboard together. The stack exposes Vault on `8200`, Prometheus on `9090`
+and the dashboard on `4173`.
 
-If you are running the Vault stack from the companion repository, use the helper
-script to populate `.env` with the current `root_token` and start the container:
-
-```bash
-bash scripts/stack.sh
-```
-
-Start the container with:
+Start the full environment with:
 
 ```bash
 docker-compose up --build
 ```
 
-Environment variables from `.env` are passed to the container at runtime.
-
-To remove the container and clean up any related Docker resources, run the
-`unstack.sh` script:
-
-```bash
-bash scripts/unstack.sh
-```
-
-This stops the running container, removes the image and prunes any dangling
-images.
+Environment variables from `.env` are passed to the dashboard at build time.
