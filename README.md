@@ -79,3 +79,13 @@ docker-compose up --build
 ```
 
 Environment variables from `.env` are passed to the container at runtime.
+
+To remove the container and clean up any related Docker resources, run the
+`unstack.sh` script:
+
+```bash
+bash scripts/unstack.sh
+```
+
+This stops the running container, removes the image and prunes any dangling
+images.
