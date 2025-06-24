@@ -2,6 +2,10 @@
 
 A small dashboard that visualises Vault usage through a series of API calls. It provides a gamified way to track the adoption of recommended Vault features.
 
+The interface is built with React and Vite. Lightweight SVG charts live under
+`src/components/charts` and HTTP helpers in `src/api` retrieve data from Vault
+and Prometheus.
+
 ## Prerequisites
 
 * **Node.js >= 18** – required to run the development server and build steps.
@@ -17,13 +21,13 @@ The script checks that Node.js is installed and that the major version is at lea
 
 ## Setup
 
-Clone the repository and create a local environment file based on the provided example:
+Clone the repository and run the provided scripts:
 
 ```bash
 git clone <repo-url>
 cd vault-dashboard
-npm install
-cp .env.example .env    # edit with your VAULT_ADDR and VAULT_TOKEN
+npm run prereqs    # verifies Node.js version
+bash scripts/stack.sh
 ```
 
 ## Development
@@ -41,6 +45,9 @@ Create an optimised production build:
 ```bash
 npm run build
 ```
+
+Running `bash scripts/stack.sh` will perform these steps automatically before
+starting the containerised stack.
 
 Deploy the contents of the `dist` directory to the static host of your choice (for example Vercel or GitHub Pages).
 
@@ -72,10 +79,20 @@ A `docker-compose.yml` file is provided to run Vault, Prometheus and the
 dashboard together. The stack exposes Vault on `8200`, Prometheus on `9090`
 and the dashboard on `4173`.
 
-Start the full environment with:
+`stack.sh` automatically installs dependencies, builds the dashboard and runs
+`docker-compose` for you. If you prefer to start the stack manually, run:
 
 ```bash
 docker-compose up --build
 ```
 
 Environment variables from `.env` are passed to the dashboard at build time.
+
+When you're finished, remove everything with:
+
+```bash
+bash scripts/unstack.sh
+```
+
+This stops the containers, removes the images and deletes local build
+artifacts like `node_modules`, `dist` and `package-lock.json`.
