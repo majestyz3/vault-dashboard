@@ -8,7 +8,7 @@ module.exports = {
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
       },
       colors: {
-        vaultBlue: '#3b82f6'
+        vaultBlue: '#3274d9'
       }
     },
   },

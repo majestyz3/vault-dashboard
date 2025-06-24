@@ -5,6 +5,8 @@ import ProgressBar from './components/charts/ProgressBar';
 import LineChart from './components/charts/LineChart';
 import DonutChart from './components/charts/DonutChart';
 import TokenLogin from './components/TokenLogin';
+import GlobalOverview, { Cluster } from './components/GlobalOverview';
+import ClusterDetails from './components/ClusterDetails';
 import useCases from './data/useCases.json';
 import adoptionHistory from './data/adoptionHistory.json';
 import {
@@ -46,6 +48,7 @@ const App: React.FC = () => {
   const [tokenRate, setTokenRate] = useState<number | null>(null);
   const [storageHealthy, setStorageHealthy] = useState<boolean | null>(null);
   const [tab, setTab] = useState<'adoption' | 'operations'>('adoption');
+  const [currentCluster, setCurrentCluster] = useState<Cluster | null>(null);
 
   const evaluateCheck = (item: UseCaseItem, data: any): boolean => {
     if (item.dataset === 'mock') return false;
@@ -68,7 +71,7 @@ const App: React.FC = () => {
   }, [token]);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !currentCluster) return;
     const load = async () => {
       try {
         const [auth, mounts, audit, replication, seal, policies, leaderResp, healthResp, leaderMetric, sealMetric, reqRate, errRate, tokenMetric, upMetric, peersMetric, storageMetric] = await Promise.all([
@@ -119,7 +122,7 @@ const App: React.FC = () => {
     load();
     const id = setInterval(load, 15000);
     return () => clearInterval(id);
-  }, [token]);
+  }, [token, currentCluster]);
 
   const totalPoints = Object.values(useCases).flat().reduce((sum, uc: UseCaseItem) => sum + uc.points, 0);
 
@@ -145,32 +148,35 @@ const App: React.FC = () => {
       {loading ? (
         <div className="text-center text-blue-500">Loading...</div>
       ) : (
-        <> 
+        <>
           <header className="bg-gray-800 shadow-md mb-6 p-4 flex items-center justify-between">
             <h1 className="text-vaultBlue text-2xl font-semibold flex items-center">
               <span className="mr-2">🔐</span>
-              Vault Adoption Dashboard
+              Vault Global Manager
             </h1>
             <button
-              onClick={() => { localStorage.removeItem('vaultToken'); setToken(null); }}
+              onClick={() => { localStorage.removeItem('vaultToken'); setToken(null); setCurrentCluster(null); }}
               className="text-sm text-gray-300 hover:text-white"
             >
               Sign out
             </button>
           </header>
-          <div className="flex space-x-4 mb-6">
-            <button onClick={() => setTab('adoption')} className={tab === 'adoption' ? 'text-vaultBlue' : 'text-gray-400'}>
-              Adoption Metrics
-            </button>
-            <button onClick={() => setTab('operations')} className={tab === 'operations' ? 'text-vaultBlue' : 'text-gray-400'}>
-              Operations
-            </button>
-          </div>
-          {tab === 'adoption' ? (
+          {currentCluster ? (
             <>
-              <div className="flex justify-center mb-6">
-                <RadialMeter percentage={percentage} />
+              <div className="flex space-x-4 mb-6">
+                <button onClick={() => setTab('adoption')} className={tab === 'adoption' ? 'text-vaultBlue' : 'text-gray-400'}>
+                  Adoption Metrics
+                </button>
+                <button onClick={() => setTab('operations')} className={tab === 'operations' ? 'text-vaultBlue' : 'text-gray-400'}>
+                  Operations
+                </button>
+                <button onClick={() => setCurrentCluster(null)} className="text-gray-400">Back to Overview</button>
               </div>
+              {tab === 'adoption' ? (
+                <>
+                  <div className="flex justify-center mb-6">
+                    <RadialMeter percentage={percentage} />
+                  </div>
               {Object.entries(useCases).map(([category, list]) => {
                 const items = list.map((item: UseCaseItem) => {
                   const data = (results as any)[item.dataset];
@@ -245,6 +251,10 @@ const App: React.FC = () => {
                 </div>
               )}
             </div>
+          )}
+            </>
+          ) : (
+            <GlobalOverview onSelect={(c) => setCurrentCluster(c)} />
           )}
         </>
       )}
