@@ -25,4 +25,7 @@ if command -v docker >/dev/null 2>&1; then
   docker image prune -f >/dev/null 2>&1 || true
 fi
 
+echo "Removing local build artifacts..."
+rm -rf node_modules dist package-lock.json
+
 echo "Cleanup complete."

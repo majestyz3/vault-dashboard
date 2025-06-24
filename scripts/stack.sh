@@ -33,4 +33,9 @@ fi
 
 rm -f "$ENV_FILE.bak"
 
+echo "Installing dependencies and building the dashboard..."
+npm install
+npm run build
+
+echo "Starting services with docker-compose..."
 docker-compose up -d --build
