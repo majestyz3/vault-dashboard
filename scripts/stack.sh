@@ -15,5 +15,9 @@ echo "Installing dependencies and building the dashboard..."
 npm install
 npm run build
 
+VAULT_ADDR_VALUE=$(grep -E '^VAULT_ADDR=' "$ENV_FILE" | cut -d= -f2-)
+PROMETHEUS_TARGET=$(echo "$VAULT_ADDR_VALUE" | sed -e 's#^[a-zA-Z]*://##')
+export PROMETHEUS_TARGET
+
 echo "Starting services with docker-compose..."
 docker-compose up -d --build

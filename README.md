@@ -87,7 +87,7 @@ and the dashboard on `4173`.
 docker-compose up --build
 ```
 
-Environment variables from `.env` are passed to the dashboard and Prometheus at build time. Set `VAULT_ADDR`, `VAULT_TOKEN` and `PROMETHEUS_TARGET` to point at your existing Vault deployment.
+Environment variables from `.env` are passed to the dashboard and Prometheus at build time. Set `VAULT_ADDR` and `VAULT_TOKEN` to point at your existing Vault deployment.
 
 When you're finished, remove everything with:
 
