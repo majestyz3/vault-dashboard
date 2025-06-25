@@ -21,12 +21,13 @@ The script checks that Node.js is installed and that the major version is at lea
 
 ## Setup
 
-Clone the repository and run the provided scripts:
+Clone the repository, configure your Vault details in `.env`, and run the provided scripts:
 
 ```bash
 git clone <repo-url>
 cd vault-dashboard
 npm run prereqs    # verifies Node.js version
+cp .env.example .env # then edit VAULT_ADDR and VAULT_TOKEN
 bash scripts/stack.sh
 ```
 
@@ -75,8 +76,8 @@ The site will be available at `http://localhost:4173`.
 
 ## Docker Compose
 
-A `docker-compose.yml` file is provided to run Vault, Prometheus and the
-dashboard together. The stack exposes Vault on `8200`, Prometheus on `9090`
+A `docker-compose.yml` file is provided to run Prometheus and the
+dashboard together. The stack exposes Prometheus on `9090`
 and the dashboard on `4173`.
 
 `stack.sh` automatically installs dependencies, builds the dashboard and runs
@@ -86,7 +87,7 @@ and the dashboard on `4173`.
 docker-compose up --build
 ```
 
-Environment variables from `.env` are passed to the dashboard at build time.
+Environment variables from `.env` are passed to the dashboard and Prometheus at build time. Set `VAULT_ADDR`, `VAULT_TOKEN` and `PROMETHEUS_TARGET` to point at your existing Vault deployment.
 
 When you're finished, remove everything with:
 
