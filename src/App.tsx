@@ -71,7 +71,12 @@ const App: React.FC = () => {
   }, [token]);
 
   useEffect(() => {
-    if (!token || !currentCluster) return;
+    if (!token) return;
+    if (!currentCluster) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     const load = async () => {
       try {
         const [auth, mounts, audit, replication, seal, policies, leaderResp, healthResp, leaderMetric, sealMetric, reqRate, errRate, tokenMetric, upMetric, peersMetric, storageMetric] = await Promise.all([
