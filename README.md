@@ -1,6 +1,6 @@
-# Vault Adoption Dashboard
+# Vault Enterprise Dashboard
 
-A small dashboard that visualises Vault usage through a series of API calls. It provides a gamified way to track the adoption of recommended Vault features.
+An updated dashboard that visualises both adoption and operational metrics for HashiCorp Vault. The interface presents a cleaner layout and aggregates data from Vault and Prometheus.
 
 The interface is built with React and Vite. Lightweight SVG charts live under
 `src/components/charts` and HTTP helpers in `src/api` retrieve data from Vault

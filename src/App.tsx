@@ -7,6 +7,7 @@ import DonutChart from './components/charts/DonutChart';
 import TokenLogin from './components/TokenLogin';
 import GlobalOverview, { Cluster } from './components/GlobalOverview';
 import ClusterDetails from './components/ClusterDetails';
+import DashboardShell from './components/DashboardShell';
 import useCases from './data/useCases.json';
 import adoptionHistory from './data/adoptionHistory.json';
 import {
@@ -148,40 +149,23 @@ const App: React.FC = () => {
     return <TokenLogin onSubmit={(t) => { setToken(t); localStorage.setItem('vaultToken', t); }} />;
   }
 
+  const handleSignOut = () => {
+    localStorage.removeItem('vaultToken');
+    setToken(null);
+    setCurrentCluster(null);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-4 font-sans max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-900 text-gray-100 font-sans">
       {loading ? (
-        <div className="text-center text-blue-500">Loading...</div>
-      ) : (
-        <>
-          <header className="bg-gray-800 shadow-md mb-6 p-4 flex items-center justify-between">
-            <h1 className="text-vaultBlue text-2xl font-semibold flex items-center">
-              <span className="mr-2">🔐</span>
-              Vault Global Manager
-            </h1>
-            <button
-              onClick={() => { localStorage.removeItem('vaultToken'); setToken(null); setCurrentCluster(null); }}
-              className="text-sm text-gray-300 hover:text-white"
-            >
-              Sign out
-            </button>
-          </header>
-          {currentCluster ? (
+        <div className="text-center text-blue-500 p-6">Loading...</div>
+      ) : currentCluster ? (
+        <DashboardShell tab={tab} setTab={setTab} onBack={() => setCurrentCluster(null)} onSignOut={handleSignOut}>
+          {tab === 'adoption' ? (
             <>
-              <div className="flex space-x-4 mb-6">
-                <button onClick={() => setTab('adoption')} className={tab === 'adoption' ? 'text-vaultBlue' : 'text-gray-400'}>
-                  Adoption Metrics
-                </button>
-                <button onClick={() => setTab('operations')} className={tab === 'operations' ? 'text-vaultBlue' : 'text-gray-400'}>
-                  Operations
-                </button>
-                <button onClick={() => setCurrentCluster(null)} className="text-gray-400">Back to Overview</button>
+              <div className="flex justify-center mb-6">
+                <RadialMeter percentage={percentage} />
               </div>
-              {tab === 'adoption' ? (
-                <>
-                  <div className="flex justify-center mb-6">
-                    <RadialMeter percentage={percentage} />
-                  </div>
               {Object.entries(useCases).map(([category, list]) => {
                 const items = list.map((item: UseCaseItem) => {
                   const data = (results as any)[item.dataset];
@@ -257,15 +241,17 @@ const App: React.FC = () => {
               )}
             </div>
           )}
-            </>
-          ) : (
-            <GlobalOverview onSelect={(c) => setCurrentCluster(c)} />
-          )}
-        </>
+        </DashboardShell>
+      ) : (
+        <div className="p-4">
+          <header className="flex items-center justify-between mb-6">
+            <h1 className="text-vaultBlue text-2xl font-semibold">Vault Manager</h1>
+            <button onClick={handleSignOut} className="text-sm text-gray-300 hover:text-white">Sign out</button>
+          </header>
+          <GlobalOverview onSelect={(c) => setCurrentCluster(c)} />
+        </div>
       )}
-      <footer className="mt-10 text-center text-xs text-gray-500">
-        Powered by Vault Enterprise
-      </footer>
+      <footer className="mt-10 text-center text-xs text-gray-500">Powered by Vault Enterprise</footer>
     </div>
   );
 };
